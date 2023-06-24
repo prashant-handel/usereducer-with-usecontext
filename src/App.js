@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useReducer } from 'react';
+import A from './components/A';
+import B from './components/B';
+import C from './components/C';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export const CountContext = React.createContext();
+
+const initialState = 0;
+const reducer = (state, action) => {
+    switch (action) {
+        case 'increment':
+            return state + 1;
+        case 'decrement':
+            return state - 1;
+        case 'reset':
+            return initialState;
+        default:
+            return state;
+    }
 }
 
-export default App;
+const App = () => {
+    const [count, dispatch] = useReducer(reducer, initialState);
+    return (
+        <CountContext.Provider value={{countDispatch: dispatch }}>
+            <div>
+                Counter = {count}
+                <br />
+                App Component
+                <br />
+                <button onClick={() => dispatch('increment')}>Increment</button>
+                <button onClick={() => dispatch('decrement')}>Decrement</button>
+                <button onClick={() => dispatch('reset')}>Reset</button>
+                <A />
+                <B />
+                <C />
+            </div>
+        </CountContext.Provider>
+    )
+}
+
+export default App
